@@ -1,0 +1,35 @@
+{
+  "name": "gist-publish-npm",
+  "version": "1.0.0",
+  "description": "Publish a Gist to npm, inferring all the things",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/quarterto/gist-publish-npm"
+  },
+  "keywords": [
+    "gist",
+    "github",
+    "git",
+    "npm",
+    "publish",
+    "module"
+  ],
+  "author": "Matt Brennan <matt@153.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quarterto/gist-publish-npm/issues"
+  },
+  "homepage": "https://github.com/quarterto/gist-publish-npm",
+  "dependencies": {
+    "bluebird": "^2.9.25",
+    "nodegit": "^0.4.0",
+    "npm": "^2.10.0"
+  },
+  "devDependencies": {
+    "babel": "^5.4.3"
+  }
+}
