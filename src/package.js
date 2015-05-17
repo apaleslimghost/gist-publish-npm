@@ -2,6 +2,7 @@ var bluebird = require('bluebird');
 var fs = bluebird.promisifyAll(require('fs'));
 var path = require('path');
 var detective = require('detective');
+var fetch = require('node-fetch');
 
 var infer = {
 	main:
@@ -23,8 +24,10 @@ var infer = {
 
 	name:
 		(id, dir, repo) => infer.main(id, dir, repo).then(
-		main => path.basename(main, '.js')
-	),
+		main => path.basename(main, '.js')).then(
+		name => fetch(`https://api.github.com/gists/${id}`).then(r => r.json()).then(
+		gist => `@${gist.owner.login}/${name}`
+	)),
 
 	author:
 		(id, dir, repo) => repo.getBranchCommit('master').then(
