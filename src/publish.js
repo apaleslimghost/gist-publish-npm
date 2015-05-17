@@ -4,6 +4,6 @@ bluebird.promisifyAll(npm.commands);
 
 module.exports = function(config, dir) {
 	return npm.loadAsync(config).then(
-		() => npm.commands.publish([dir])
+		() => npm.commands.publishAsync([dir])
 	);
 };
