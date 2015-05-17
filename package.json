@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "Publish a Gist to npm, inferring all the things",
   "main": "./lib/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "bin": "./bin/gist-publish-npm.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/quarterto/gist-publish-npm"
@@ -27,8 +25,10 @@
   "dependencies": {
     "babel-runtime": "^5.4.3",
     "bluebird": "^2.9.25",
+    "chalk": "^1.0.0",
     "detective": "^4.0.2",
     "lodash.defaults": "^3.1.1",
+    "minimist": "^1.1.1",
     "node-fetch": "^1.2.1",
     "nodegit": "^0.4.0",
     "npm": "^2.10.0",
