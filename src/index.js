@@ -8,7 +8,7 @@ var publ  = require('./publish.js');
 var conf  = require('./config.json');
 
 module.exports =
-	id => temp.mkdirSync(id).then(
+	id => temp.mkdirAsync(id).then(
 	dir => clone(id, dir).then(
 	repo => infer(id, repo).then(
 	pack => fs.writeFileAsync(
