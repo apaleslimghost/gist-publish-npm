@@ -5,12 +5,10 @@ var fs    = blueb.promisifyAll(require('fs'));
 var temp  = blueb.promisifyAll(require('temp').track());
 var publ  = require('./publish.js');
 
-var conf  = require('./config.json');
-
 module.exports =
-	id => temp.mkdirAsync(id).then(
+	(id, config) => temp.mkdirAsync(id).then(
 	dir => clone(id, dir).then(
-	repo => infer(id, repo).then(
+	repo => infer(id, dir, repo).then(
 	pack => fs.writeFileAsync(
 		`${dir}/package.json`,
 		JSON.stringify(pack),

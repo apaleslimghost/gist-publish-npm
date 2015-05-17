@@ -2,7 +2,7 @@
   "name": "gist-publish-npm",
   "version": "1.0.0",
   "description": "Publish a Gist to npm, inferring all the things",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,9 +25,11 @@
   },
   "homepage": "https://github.com/quarterto/gist-publish-npm",
   "dependencies": {
+    "babel-runtime": "^5.4.3",
     "bluebird": "^2.9.25",
     "nodegit": "^0.4.0",
-    "npm": "^2.10.0"
+    "npm": "^2.10.0",
+    "temp": "^0.8.1"
   },
   "devDependencies": {
     "babel": "^5.4.3"
