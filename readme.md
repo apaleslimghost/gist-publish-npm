@@ -16,7 +16,7 @@ Positional args are Gist IDs to publish, flags will be passed verbatim as [npm c
 
 ## This tool assumes:
 
- - You've already run `npm login`, or you trust me with your npm login deets and can work out how the pass them in
+ - You've already run `npm login`, or you trust me with your npm login deets and can work out how to pass them in
  - Your Gist has a single `.js` file
    - That should be the entry point of the module
    - Whose basename should be the name of the module
@@ -29,7 +29,7 @@ Your Gist will be published with the version `1.<number of commits minus one>.0`
 
 ## Dependencies
 
-Any `require` calls in your main will be added top `package.json` as dependencies, with `*` as the version. Sorry.
+Any `require` calls in your main will be added to `package.json` as dependencies, with `*` as the version. Sorry.
 
 ## Licence
 
