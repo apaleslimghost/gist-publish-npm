@@ -11,7 +11,7 @@ module.exports =
 	repo => infer(id, dir, repo).then(
 	pack => fs.writeFileAsync(
 		`${dir}/package.json`,
-		JSON.stringify(pack),
+		JSON.stringify((console.log(pack), pack)),
 		'utf8'
 	))).then(() => publ(config, dir)));
 
