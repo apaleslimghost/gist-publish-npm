@@ -1,12 +1,13 @@
 var bluebird = require('bluebird');
 var fs = bluebird.promisifyAll(require('fs'));
 var path = require('path');
+var detective = require('detective');
 
 var infer = {
 	main:
 		(id, dir, repo) => fs.readdirAsync(dir).then(
 		files => files.filter(file => file.endsWith('.js'))).then(
-		jsFiles => jsFiles.length === 1 ? jsFiles[0] : 'index.js'
+		jsFiles => jsFiles[0]
 	),
 
 	version:
@@ -22,17 +23,25 @@ var infer = {
 
 	name:
 		(id, dir, repo) => infer.main(id, dir, repo).then(
-		main => main === 'index.js'?  getGistName(id)
-          : /* otherwise */       path.basename(main, '.js')
+		main => path.basename(main, '.js')
 	),
 
 	author:
 		(id, dir, repo) => repo.getBranchCommit('master').then(
 		commit => commit.author()).then(
 		author => `${author.name()} <${author.email()}>`
-	)
+	),
+
+	dependencies:
+		(id, dir, repo) => infer.main(id, dir, repo).then(
+		main => path.resolve(dir, main)).then(
+		mainPath => fs.readFileAsync(mainPath, 'utf8').then(
+		src => stars(detective(src).filter(dep => !dep.startsWith('.')))
+	))
 };
 
+var stars = (deps) => arraysToObj(deps, arrayN(deps.length, '*'));
+var arrayN = (n, x) => n <= 0? [] : [x].concat(arrayN(n - 1, x));
 var arraysToObj = (xs, ys) => xs.reduce((o, x, i) => (o[x] = ys[i], o), {});
 
 module.exports = function(id, dir, repo) {
