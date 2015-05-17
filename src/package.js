@@ -36,11 +36,11 @@ var infer = {
 		(id, dir, repo) => infer.main(id, dir, repo).then(
 		main => path.resolve(dir, main)).then(
 		mainPath => fs.readFileAsync(mainPath, 'utf8').then(
-		src => stars(detective(src).filter(dep => !dep.startsWith('.')))
+		src => stars(detective(src))
 	))
 };
 
-var stars = (deps) => arraysToObj(deps, arrayN(deps.length, '*'));
+var stars = (deps) => arraysToObj(deps, arrayN(deps.length, '*')); //yolo
 var arrayN = (n, x) => n <= 0? [] : [x].concat(arrayN(n - 1, x));
 var arraysToObj = (xs, ys) => xs.reduce((o, x, i) => (o[x] = ys[i], o), {});
 
