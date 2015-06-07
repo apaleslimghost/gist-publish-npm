@@ -39,9 +39,12 @@ var infer = {
 		(id, dir, repo) => infer.main(id, dir, repo).then(
 		main => path.resolve(dir, main)).then(
 		mainPath => fs.readFileAsync(mainPath, 'utf8').then(
-		src => stars(detective(src))
+		src => detective(src)).then(
+		packages => stars(packages.map(actualPackageName))
 	))
 };
+
+var actualPackageName = (req) => req.split('/', req[0] === '@' ? 2 : 1).join('/');
 
 var stars = (deps) => arraysToObj(deps, arrayN(deps.length, '*')); //yolo
 var arrayN = (n, x) => n <= 0? [] : [x].concat(arrayN(n - 1, x));
