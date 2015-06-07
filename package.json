@@ -1,6 +1,6 @@
 {
   "name": "gist-publish-npm",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Publish a Gist to npm, inferring all the things",
   "main": "./lib/index.js",
   "bin": "./bin/gist-publish-npm.js",
@@ -16,7 +16,9 @@
     "publish",
     "module"
   ],
-  "scripts": {"prepublish": "make"},
+  "scripts": {
+    "prepublish": "make"
+  },
   "author": "Matt Brennan <matt@153.io>",
   "license": "MIT",
   "bugs": {
