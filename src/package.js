@@ -3,6 +3,7 @@ var fs = bluebird.promisifyAll(require('fs'));
 var path = require('path');
 var detective = require('detective');
 var fetch = require('node-fetch');
+var builtins = require('builtin-modules');
 
 var infer = {
 	main:
@@ -40,7 +41,7 @@ var infer = {
 		main => path.resolve(dir, main)).then(
 		mainPath => fs.readFileAsync(mainPath, 'utf8').then(
 		src => detective(src)).then(
-		packages => stars(packages.map(actualPackageName))
+		packages => stars(packages.filter(p => builtins.indexOf(p) === -1).map(actualPackageName))
 	))
 };
 

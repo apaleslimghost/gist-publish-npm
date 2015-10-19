@@ -28,6 +28,7 @@
   "dependencies": {
     "babel-runtime": "^5.8.25",
     "bluebird": "^2.10.2",
+    "builtin-modules": "^1.1.0",
     "chalk": "^1.1.1",
     "detective": "^4.2.0",
     "lodash.defaults": "^3.1.2",
