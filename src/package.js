@@ -4,6 +4,8 @@ var path = require('path');
 var detective = require('detective');
 var fetch = require('node-fetch');
 
+var jsonOrThrowError = r => r.json().then(j => r.ok ? j : bluebird.reject(new Error(j.message || r.statusText)));
+
 var infer = {
 	main:
 		(id, dir, repo) => fs.readdirAsync(dir).then(
@@ -25,7 +27,7 @@ var infer = {
 	name:
 		(id, dir, repo) => infer.main(id, dir, repo).then(
 		main => path.basename(main, '.js')).then(
-		name => fetch(`https://api.github.com/gists/${id}`).then(r => r.json()).then(
+		name => fetch(`https://api.github.com/gists/${id}`).then(jsonOrThrowError).then(
 		gist => `@${gist.owner.login}/${name}`
 	)),
 
