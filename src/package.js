@@ -43,7 +43,7 @@ var infer = {
 		main => path.resolve(dir, main)).then(
 		mainPath => fs.readFileAsync(mainPath, 'utf8').then(
 		src => detective(src)).then(
-		packages => stars(packages.filter(p => builtins.indexOf(p) === -1).map(actualPackageName))
+		packages => stars(packages.filter(p => p.indexOf('.') !== 0 && builtins.indexOf(p) === -1).map(actualPackageName))
 	))
 };
 
