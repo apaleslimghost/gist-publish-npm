@@ -1,7 +1,7 @@
-var {Clone} = require('nodegit');
+import {Clone} from 'nodegit';
 
-var gistGitUrl = (id) => `http://gist.github.com/${id}.git`;
+const gistGitUrl = (id) => `http://gist.github.com/${id}.git`;
 
-module.exports = (id, dir)=> Clone.clone(gistGitUrl(id), dir, {
+module.exports = (id, dir) => Clone.clone(gistGitUrl(id), dir, {
 	remoteCallbacks: {certificateCheck: () => true}
 });

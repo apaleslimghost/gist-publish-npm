@@ -1,7 +1,7 @@
-var bluebird = require('bluebird');
-var npm = bluebird.promisifyAll(require('npm'));
-var publish = (...a) => bluebird.promisify(npm.commands.publish)(...a);
+import {promisifyAll, promisify} from 'bluebird';
+import origNpm from 'npm';
 
-module.exports = function(config, dir) {
-	return npm.loadAsync(config).then(() => publish([dir]));
-};
+const npm = promisifyAll(origNpm);
+const publish = (...a) => promisify(origNpm.commands.publish)(...a);
+
+module.exports = (config, dir) => npm.loadAsync(config).then(() => publish([dir]));

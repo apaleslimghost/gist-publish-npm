@@ -1,21 +1,23 @@
-var clone = require('./clone.js');
-var infer = require('./package.js');
-var blueb = require('bluebird');
-var fs    = blueb.promisifyAll(require('fs'));
-var temp  = blueb.promisifyAll(require('temp').track());
-var publ  = require('./publish.js');
-var dflt  = require('lodash.defaults');
+import clone from './clone.js';
+import infer from './package.js';
+import {promisifyAll} from 'bluebird';
+import origFs from 'fs';
+import origTemp from 'temp';
+import publ from './publish.js';
+import defaults from 'lodash.defaults';
 
-var defaultConfig = {
+const fs = promisifyAll(origFs);
+const temp = promisifyAll(origTemp.track());
+
+const defaultConfig = {
 	access: 'public'
 };
 
-module.exports =
-	(id, config = {}) => temp.mkdirAsync(id).then(
-	dir => clone(id, dir).then(
-	repo => infer(id, dir, repo).then(
-	pack => fs.writeFileAsync(`${dir}/package.json`, JSON.stringify(pack), 'utf8').then(
-	() => publ(dflt(defaultConfig, config), dir).then(
-	() => pack
-)))));
-
+module.exports = async function(id, config = {}) {
+	const dir = await temp.mkdirAsync(id);
+	const repo = await clone(id, dir);
+	const pack = await infer(id, dir, repo);
+	await fs.writeFileAsync(`${dir}/package.json`, JSON.stringify(pack), 'utf8');
+	await publ(defaults(defaultConfig, config), dir);
+	return pack;
+};

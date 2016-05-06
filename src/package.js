@@ -1,63 +1,76 @@
-var bluebird = require('bluebird');
-var fs = bluebird.promisifyAll(require('fs'));
-var path = require('path');
-var detective = require('detective');
-var fetch = require('node-fetch');
-var builtins = require('builtin-modules');
+import Promise, {promisifyAll} from 'bluebird';
+import origFs from 'fs';
+import path from 'path';
+import detective from 'detective';
+import fetch from 'node-fetch';
+import builtins from 'builtin-modules';
 
-var jsonOrThrowError = r => r.json().then(j => r.ok ? j : bluebird.reject(new Error(j.message || r.statusText)));
+const fs = promisifyAll(origFs);
+
+async function jsonOrThrowError(response) {
+	const json = await response.json();
+	if(response.ok) {
+		return json;
+	} else {
+		throw new Error(json.message || r.statusText);
+	}
+}
 
 var infer = {
-	main:
-		(id, dir, repo) => fs.readdirAsync(dir).then(
-		files => files.filter(file => file.endsWith('.js'))).then(
-		jsFiles => jsFiles[0]
-	),
+	async main(id, dir, repo) {
+		const files = await fs.readdirAsync(dir);
+		const jsfiles = files.filter(file => file.endsWith('.js'));
+		return jsfiles[0];
+	},
 
-	version:
-		(id, dir, repo) => repo.getBranchCommit('master').then(
-		master => new bluebird((resolve, reject) => {
+	async version(id, dir, repo) {
+		const master = await repo.getBranchCommit('master');
+		const commits = await new Promise((resolve, reject) => {
 			var history = master.history();
 			history.on('end', resolve);
 			history.on('error', reject);
 			history.start();
-		}).then(
-		commits => `1.${commits.length - 1}.0`
-	)),
+		});
+		return `1.${commits.length - 1}.0`;
+	},
 
-	name:
-		(id, dir, repo) => infer.main(id, dir, repo).then(
-		main => path.basename(main, '.js')).then(
-		name => fetch(`https://api.github.com/gists/${id}`).then(jsonOrThrowError).then(
-		gist => `@${gist.owner.login}/${name}`
-	)),
+	async name(id, dir, repo) {
+		const main = await infer.main(id, dir, repo);
+		const name = path.basename(main, '.js');
+		const gist = await fetch(`https://api.github.com/gists/${id}`).then(jsonOrThrowError);
+		return `@${gist.owner.login}/${name}`;
+	},
 
-	author:
-		(id, dir, repo) => repo.getBranchCommit('master').then(
-		commit => commit.author()).then(
-		author => `${author.name()} <${author.email()}>`
-	),
+	async author(id, dir, repo) {
+		const commit = await repo.getBranchCommit('master');
+		const author = await commit.author();
+		return `${author.name()} <${author.email()}>`;
+	},
 
-	dependencies:
-		(id, dir, repo) => infer.main(id, dir, repo).then(
-		main => path.resolve(dir, main)).then(
-		mainPath => fs.readFileAsync(mainPath, 'utf8').then(
-		src => detective(src)).then(
-		packages => stars(packages.filter(p => p.indexOf('.') !== 0 && builtins.indexOf(p) === -1).map(actualPackageName))
-	))
+	async dependencies(id, dir, repo) {
+		const mainPath = path.resolve(dir, await infer.main(id, dir, repo));
+		const src = await fs.readFileAsync(mainPath, 'utf8');
+		const packages = detective(src);
+		return stars(
+			packages
+			.filter(
+				p => p.indexOf('.') !== 0 && builtins.indexOf(p) === -1
+			)
+			.map(actualPackageName)
+		);
+	},
 };
 
-var actualPackageName = (req) => req.split('/', req[0] === '@' ? 2 : 1).join('/');
+const actualPackageName = (req) => req.split('/', req[0] === '@' ? 2 : 1).join('/');
+const stars = (deps) => arraysToObj(deps, arrayN(deps.length, '*')); //yolo
+const arrayN = (n, x) => n <= 0? [] : [x].concat(arrayN(n - 1, x));
+const arraysToObj = (xs, ys) => xs.reduce((o, x, i) => (o[x] = ys[i], o), {});
 
-var stars = (deps) => arraysToObj(deps, arrayN(deps.length, '*')); //yolo
-var arrayN = (n, x) => n <= 0? [] : [x].concat(arrayN(n - 1, x));
-var arraysToObj = (xs, ys) => xs.reduce((o, x, i) => (o[x] = ys[i], o), {});
-
-module.exports = function(id, dir, repo) {
-	var keys = Object.keys(infer);
-	return bluebird.all(
+module.exports = async function(id, dir, repo) {
+	const keys = Object.keys(infer);
+ 	const values = await Promise.all(
 		keys.map(k => infer[k](id, dir, repo))
-	).then(
-		(values) => arraysToObj(keys, values)
 	);
+
+	return arraysToObj(keys, values);
 };
