@@ -15,4 +15,4 @@ async function doPublish(id, options) {
 	}
 }
 
-argv._.forEach(id => doPublish(id, argv));
+Promise.all(argv._.map(id => doPublish(id, argv))).then(() => {});
