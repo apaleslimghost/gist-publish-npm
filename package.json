@@ -27,6 +27,8 @@
   "homepage": "https://github.com/quarterto/gist-publish-npm",
   "dependencies": {
     "@quarterto/promise-all-object": "^1.1.0",
+    "babel-core": "^6.8.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.8.0",
     "babel-runtime": "^6.6.1",
     "bluebird": "^2.10.2",
     "builtin-modules": "^1.1.0",

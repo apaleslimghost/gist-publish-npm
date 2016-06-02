@@ -8,6 +8,7 @@ import HJSON from 'hjson';
 import merge from 'lodash.merge';
 import promiseAllObject from '@quarterto/promise-all-object';
 import mapValues from 'lodash.mapvalues';
+import babel from 'babel-core';
 
 const fs = promisifyAll(origFs);
 
@@ -65,7 +66,10 @@ const infer = {
 	async dependencies(id, dir, repo) {
 		const mainPath = path.resolve(dir, await infer.main(id, dir, repo));
 		const src = await fs.readFileAsync(mainPath, 'utf8');
-		const packages = detective(src);
+		const transformed = babel.transform(src, {
+			plugins: 'transform-es2015-modules-commonjs'
+		});
+		const packages = detective(transformed);
 		return stars(
 			packages
 			.filter(
