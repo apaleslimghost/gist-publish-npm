@@ -69,7 +69,7 @@ const infer = {
 		const transformed = transform(src, {
 			plugins: 'transform-es2015-modules-commonjs'
 		});
-		const packages = detective(transformed);
+		const packages = detective(transformed.code);
 		return stars(
 			packages
 			.filter(
