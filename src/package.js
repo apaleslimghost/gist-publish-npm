@@ -79,6 +79,29 @@ const infer = {
 
 	homepage(id, dir, repo) {
 		return `https://gist.github.com/${id}`;
+	},
+
+	devDependencies() {
+		return {
+			'babel-cli': '^6.0.0',
+			'babel-preset-es2015': '^6.0.0',
+		};
+	},
+
+	babel() {
+		return {
+			presets: ['es2015']
+		};
+	},
+
+	async scripts(id, dir, repo) {
+		const main = await infer.main(id, dir, repo);
+		const orig = path.resolve(dir, `_${main}`);
+		const compiled = path.resolve(dir, main);
+
+		return {
+			prepublish: `mv ${compiled} ${orig} ; babel ${orig} -o ${compiled}`
+		};
 	}
 };
 

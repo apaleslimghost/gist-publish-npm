@@ -3,5 +3,10 @@ import origNpm from 'npm';
 
 const npm = promisifyAll(origNpm);
 const publish = (...a) => promisify(origNpm.commands.publish)(...a);
+const install = (...a) => promisify(origNpm.commands.install)(...a);
 
-module.exports = (config, dir) => npm.loadAsync(config).then(() => publish([dir]));
+module.exports = async function(config, dir) {
+	await npm.loadAsync(config);
+	await install([]);
+	return publish([dir])
+};
