@@ -47,6 +47,15 @@ var infer = {
 		return `${author.name()} <${author.email()}>`;
 	},
 
+	async bin(id, dir, repo) {
+		const main = await infer.main(id, dir, repo);
+		const src = await fs.readFileAsync(path.resolve(dir, main), 'utf8');
+		const firstLine = src.split('\n')[0];
+		if(firstLine === '#!/usr/bin/env node') {
+			return main;
+		}
+	},
+
 	async dependencies(id, dir, repo) {
 		const mainPath = path.resolve(dir, await infer.main(id, dir, repo));
 		const src = await fs.readFileAsync(mainPath, 'utf8');
@@ -72,5 +81,5 @@ module.exports = async function(id, dir, repo) {
 		keys.map(k => infer[k](id, dir, repo))
 	);
 
-	return arraysToObj(keys, values);
+	return arraysToObj(keys, values.filter(v => v));
 };
