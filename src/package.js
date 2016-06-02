@@ -68,6 +68,14 @@ var infer = {
 			.map(actualPackageName)
 		);
 	},
+
+	repository(id, dir, repo) {
+		return `gist:${id}`;
+	},
+
+	homepage(id, dir, repo) {
+		return `https://gist.github.com/${id}`;
+	}
 };
 
 const actualPackageName = (req) => req.split('/', req[0] === '@' ? 2 : 1).join('/');
