@@ -4,6 +4,8 @@ import path from 'path';
 import detective from 'detective';
 import fetch from 'node-fetch';
 import builtins from 'builtin-modules';
+import LJSON from 'ljson';
+import merge from 'lodash.merge';
 
 const fs = promisifyAll(origFs);
 
@@ -16,7 +18,9 @@ async function jsonOrThrowError(response) {
 	}
 }
 
-var infer = {
+const getGist = id => fetch(`https://api.github.com/gists/${id}`).then(jsonOrThrowError);
+
+const infer = {
 	async main(id, dir, repo) {
 		const files = await fs.readdirAsync(dir);
 		const jsfiles = files.filter(file => file.endsWith('.js'));
@@ -26,7 +30,7 @@ var infer = {
 	async version(id, dir, repo) {
 		const master = await repo.getBranchCommit('master');
 		const commits = await new Promise((resolve, reject) => {
-			var history = master.history();
+			const history = master.history();
 			history.on('end', resolve);
 			history.on('error', reject);
 			history.start();
@@ -37,7 +41,7 @@ var infer = {
 	async name(id, dir, repo) {
 		const main = await infer.main(id, dir, repo);
 		const name = path.basename(main, '.js');
-		const gist = await fetch(`https://api.github.com/gists/${id}`).then(jsonOrThrowError);
+		const gist = await getGist(id);
 		return `@${gist.owner.login}/${name}`;
 	},
 
@@ -83,11 +87,18 @@ const stars = (deps) => arraysToObj(deps, arrayN(deps.length, '*')); //yolo
 const arrayN = (n, x) => n <= 0? [] : [x].concat(arrayN(n - 1, x));
 const arraysToObj = (xs, ys) => xs.reduce((o, x, i) => (o[x] = ys[i], o), {});
 
+async function getExtraMetadata(id) {
+	const {description} = await getGist(id);
+	return LJSON.parse(description);
+};
+
 module.exports = async function(id, dir, repo) {
 	const keys = Object.keys(infer);
  	const values = await Promise.all(
 		keys.map(k => infer[k](id, dir, repo))
 	);
 
-	return arraysToObj(keys, values.filter(v => v));
+	const base = arraysToObj(keys, values.filter(v => v));
+	const extra = await getExtraMetadata(id);
+	return merge(base, extra);
 };
