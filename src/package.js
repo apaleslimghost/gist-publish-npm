@@ -4,7 +4,7 @@ import path from 'path';
 import detective from 'detective';
 import fetch from 'node-fetch';
 import builtins from 'builtin-modules';
-import LJSON from 'ljson';
+import HJSON from 'hjson';
 import merge from 'lodash.merge';
 
 const fs = promisifyAll(origFs);
@@ -112,7 +112,7 @@ const arraysToObj = (xs, ys) => xs.reduce((o, x, i) => (o[x] = ys[i], o), {});
 
 async function getExtraMetadata(id) {
 	const {description} = await getGist(id);
-	return LJSON.parse(description);
+	return HJSON.parse(description);
 };
 
 module.exports = async function(id, dir, repo) {
