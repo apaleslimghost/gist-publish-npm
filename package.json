@@ -1,6 +1,6 @@
 {
   "name": "gist-publish-npm",
-  "version": "1.4.0-3",
+  "version": "1.4.0-4",
   "description": "Publish a Gist to npm, inferring all the things",
   "main": "./lib/index.js",
   "bin": "./lib/bin.js",
