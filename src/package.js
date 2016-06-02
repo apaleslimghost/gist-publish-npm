@@ -100,5 +100,7 @@ module.exports = async function(id, dir, repo) {
 
 	const base = arraysToObj(keys, values.filter(v => v));
 	const extra = await getExtraMetadata(id);
-	return merge(base, extra);
+	const conf = merge(base, extra);
+	console.log(conf);
+	return conf;
 };
