@@ -6,6 +6,8 @@ import fetch from 'node-fetch';
 import builtins from 'builtin-modules';
 import HJSON from 'hjson';
 import merge from 'lodash.merge';
+import promiseAllObject from '@quarterto/promise-all-object';
+import mapValues from 'lodash.mapvalues';
 
 const fs = promisifyAll(origFs);
 
@@ -116,12 +118,7 @@ async function getExtraMetadata(id) {
 };
 
 module.exports = async function(id, dir, repo) {
-	const keys = Object.keys(infer);
- 	const values = await Promise.all(
-		keys.map(k => infer[k](id, dir, repo))
-	);
-
-	const base = arraysToObj(keys, values.filter(v => v));
+	const base = await promiseAllObject(mapValues(infer, part => part(id, dir, repo)));
 	const extra = await getExtraMetadata(id);
 	const conf = merge(base, extra);
 	console.log(conf);
