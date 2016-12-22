@@ -1,16 +1,14 @@
-import Promise, {promisifyAll} from 'bluebird';
-import origFs from 'fs';
-import path from 'path';
-import detective from 'detective';
-import fetch from 'node-fetch';
-import builtins from 'builtin-modules';
-import HJSON from 'hjson';
-import merge from 'lodash.merge';
-import promiseAllObject from '@quarterto/promise-all-object';
-import mapValues from 'lodash.mapvalues';
-import {transform} from 'babel-core';
-
-const fs = promisifyAll(origFs);
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs'));
+const path = require('path');
+const detective = require('detective');
+const fetch = require('node-fetch');
+const builtins = require('builtin-modules');
+const HJSON = require('hjson');
+const merge = require('lodash.merge');
+const promiseAllObject = require('@quarterto/promise-all-object');
+const mapValues = require('lodash.mapvalues');
+const {transform} = require('babel-core');
 
 async function jsonOrThrowError(response) {
 	const json = await response.json();

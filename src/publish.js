@@ -1,5 +1,5 @@
-import {promisifyAll, promisify} from 'bluebird';
-import origNpm from 'npm';
+const {promisifyAll, promisify} = require('bluebird');
+const origNpm = require('npm');
 
 const npm = promisifyAll(origNpm);
 const publish = (...a) => promisify(origNpm.commands.publish)(...a);

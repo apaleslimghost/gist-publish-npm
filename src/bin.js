@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import minimist from 'minimist';
-import publish from '../lib/index.js';
-import chalk from 'chalk';
+const minimist = require('minimist');
+const publish = require('../lib/index.js');
+const chalk = require('chalk');
 
 const argv = minimist(process.argv.slice(2));
 

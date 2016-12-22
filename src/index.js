@@ -1,10 +1,10 @@
-import clone from './clone.js';
-import infer from './package.js';
-import {promisifyAll} from 'bluebird';
-import origFs from 'fs';
-import origTemp from 'temp';
-import publ from './publish.js';
-import defaults from 'lodash.defaults';
+const clone = require('./clone.js');
+const infer = require('./package.js');
+const {promisifyAll} = require('bluebird');
+const origFs = require('fs');
+const origTemp = require('temp');
+const publ = require('./publish.js');
+const defaults = require('lodash.defaults');
 
 const fs = promisifyAll(origFs);
 const temp = promisifyAll(origTemp.track());

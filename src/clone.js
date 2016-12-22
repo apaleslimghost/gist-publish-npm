@@ -1,4 +1,4 @@
-import {Clone} from 'nodegit';
+const {Clone} = require('nodegit');
 
 const gistGitUrl = (id) => `http://gist.github.com/${id}.git`;
 
