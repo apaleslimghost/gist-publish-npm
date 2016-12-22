@@ -1,5 +1,4 @@
-const Promise = require('bluebird');
-const fs = Promise.promisifyAll(require('fs'));
+const fs = require('mz/fs');
 const path = require('path');
 const detective = require('detective');
 const fetch = require('node-fetch');
