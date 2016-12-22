@@ -8,7 +8,6 @@ const HJSON = require('hjson');
 const merge = require('lodash.merge');
 const promiseAllObject = require('@quarterto/promise-all-object');
 const mapValues = require('lodash.mapvalues');
-const {transform} = require('babel-core');
 
 async function jsonOrThrowError(response) {
 	const json = await response.json();
@@ -64,9 +63,6 @@ const infer = {
 	async dependencies(id, dir, repo) {
 		const mainPath = path.resolve(dir, await infer.main(id, dir, repo));
 		const src = await fs.readFileAsync(mainPath, 'utf8');
-		const transformed = transform(src, {
-			plugins: 'transform-es2015-modules-commonjs'
-		});
 		const packages = detective(transformed.code);
 		return stars(
 			packages
@@ -83,29 +79,6 @@ const infer = {
 
 	homepage(id, dir, repo) {
 		return `https://gist.github.com/${id}`;
-	},
-
-	devDependencies() {
-		return {
-			'babel-cli': '^6.0.0',
-			'babel-preset-es2015': '^6.0.0',
-		};
-	},
-
-	babel() {
-		return {
-			presets: ['es2015']
-		};
-	},
-
-	async scripts(id, dir, repo) {
-		const main = await infer.main(id, dir, repo);
-		const orig = path.resolve(dir, `_${main}`);
-		const compiled = path.resolve(dir, main);
-
-		return {
-			prepublish: `mv ${compiled} ${orig} ; babel ${orig} -o ${compiled}`
-		};
 	}
 };
 
