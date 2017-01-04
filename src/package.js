@@ -97,7 +97,5 @@ async function getExtraMetadata(id) {
 module.exports = async function(id, dir, repo) {
 	const base = await promiseAllObject(mapValues(infer, part => part(id, dir, repo)));
 	const extra = await getExtraMetadata(id);
-	const conf = merge(base, extra);
-	console.log(conf);
-	return conf;
+	return merge(base, extra);
 };
