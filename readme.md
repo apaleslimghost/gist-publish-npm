@@ -9,10 +9,10 @@ npm install -g gist-publish-npm
 ## Usage
 
 ```
-gist-publish-npm [gist-id, ...] [config]
+gist-publish-npm [gist-id, ...]
 ```
 
-Positional args are Gist IDs to publish, flags will be passed verbatim as [npm config vars](https://docs.npmjs.com/misc/config).
+Pass a list of Gist IDs to publish.
 
 ## This tool assumes:
 
