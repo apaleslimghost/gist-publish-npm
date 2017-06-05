@@ -21,7 +21,6 @@ Positional args are Gist IDs to publish, flags will be passed verbatim as [npm c
    - That should be the entry point of the module
    - Whose basename should be the name of the module
  - Your Github username is a reasonable thing to use as the [package scope](https://docs.npmjs.com/misc/scope)
- - The last committer to the Gist is a reasonable thing to use as the package author
 
 ## Package versions
 
