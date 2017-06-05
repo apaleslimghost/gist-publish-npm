@@ -1,23 +1,33 @@
-import clone from './clone.js';
-import infer from './package.js';
-import {promisifyAll} from 'bluebird';
-import origFs from 'fs';
-import origTemp from 'temp';
-import publ from './publish.js';
-import defaults from 'lodash.defaults';
+const github = require('gh-got');
+const npmPublishProgrammatically = require('npm-publish-programmatically');
+const mapValues = require('lodash.mapvalues');
+const log = require('./logger');
+const chalk = require('chalk');
+const clipboard = require('clipboardy');
+const inferPackage = require('./package');
 
-const fs = promisifyAll(origFs);
-const temp = promisifyAll(origTemp.track());
+async function publish(gistId, {npmToken}) {
+	log.start(`${chalk.grey('fetching')} ${chalk.cyan.italic(`gist.github.com/${gistId}`)}`);
+	const {body: {files, owner, history, description}} = await github(`gists/${gistId}`);
 
-const defaultConfig = {
-	access: 'public'
-};
+	const pack = await inferPackage({gistId, description, files, owner, history});
+	const spec = `${pack.name}@${pack.version}`;
 
-module.exports = async function(id, config = {}) {
-	const dir = await temp.mkdirAsync(id);
-	const repo = await clone(id, dir);
-	const pack = await infer(id, dir, repo);
-	await fs.writeFileAsync(`${dir}/package.json`, JSON.stringify(pack), 'utf8');
-	await publ(defaults(defaultConfig, config), dir);
-	return pack;
-};
+	log.message(`${chalk.grey('about to publish')} ${spec}`);
+
+	const content = Object.assign(
+		mapValues(files, ({content}) => content),
+		{'package.json': pack}
+	);
+
+	await npmPublishProgrammatically(content, {auth: npmToken});
+
+	log.success(`${chalk.grey('published')} ${spec}`);
+
+	try {
+		await clipboard.write(spec);
+		log.clipboard('copied to clipboard');
+	} catch(e) {}
+}
+
+module.exports = publish;

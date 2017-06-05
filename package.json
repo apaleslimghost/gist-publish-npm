@@ -26,26 +26,23 @@
   },
   "homepage": "https://github.com/quarterto/gist-publish-npm",
   "dependencies": {
-    "@quarterto/promise-all-object": "^1.1.0",
-    "babel-runtime": "^6.6.1",
-    "bluebird": "^2.10.2",
-    "builtin-modules": "^1.1.0",
-    "chalk": "^1.1.1",
-    "detective": "^4.2.0",
-    "hjson": "^1.8.4",
-    "lodash.defaults": "^3.1.2",
-    "lodash.mapvalues": "^4.3.0",
-    "lodash.merge": "^4.3.5",
+    "@quarterto/gpn-test-2": "^1.0.0",
+    "@quarterto/symbol-logger": "^1.7.0",
+    "builtin-modules": "^1.1.1",
+    "chalk": "^1.1.3",
+    "clipboardy": "^1.1.2",
+    "detective": "^4.5.0",
+    "gh-got": "^5.0.0",
+    "hjson": "^2.4.2",
+    "lodash.mapvalues": "^4.6.0",
+    "lodash.merge": "^4.6.0",
+    "lodash.values": "^4.3.0",
     "minimist": "^1.2.0",
-    "node-fetch": "^1.3.3",
-    "nodegit": "^0.13.0",
-    "npm": "^2.14.8",
-    "temp": "^0.8.3"
+    "npm-publish-programmatically": "^1.0.1",
+    "path": "^0.12.7",
+    "registry-auth-token": "^3.3.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.8.0",
-    "babel-plugin-transform-runtime": "^6.8.0",
-    "babel-preset-es2015": "^6.6.0",
-    "babel-preset-stage-3": "^6.5.0"
+    "async-to-gen": "^1.3.3"
   }
 }
