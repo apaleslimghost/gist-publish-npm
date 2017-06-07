@@ -5,6 +5,7 @@ const log = require('./logger');
 const chalk = require('chalk');
 const clipboard = require('clipboardy');
 const inferPackage = require('./package');
+const buble = require('buble');
 
 async function publish(gistId, {npmToken}) {
 	log.start(`${chalk.grey('fetching')} ${chalk.cyan.italic(`gist.github.com/${gistId}`)}`);
@@ -16,7 +17,13 @@ async function publish(gistId, {npmToken}) {
 	log.message(`${chalk.grey('about to publish')} ${spec}`);
 
 	const content = Object.assign(
-		mapValues(files, ({content}) => content),
+		mapValues(files, ({content}, name) => {
+			if(name.match(/\.jsx?$/)) {
+				return buble.transform(content).code;
+			}
+
+			return content;
+		}),
 		{'package.json': pack}
 	);
 
