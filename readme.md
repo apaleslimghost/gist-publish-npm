@@ -28,7 +28,7 @@ Your Gist will be published with the version `1.<number of commits minus one>.0`
 
 ## Dependencies
 
-Any `require` calls in your main will be added to `package.json` as dependencies, with `*` as the version. Sorry.
+Any `require` calls in your main will be added to `package.json` as dependencies, using the latest published version.
 
 ## Licence
 
