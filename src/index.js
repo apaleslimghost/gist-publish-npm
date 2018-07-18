@@ -19,7 +19,16 @@ async function publish(gistId, {npmToken}) {
 	const content = Object.assign(
 		mapValues(files, ({content}, name) => {
 			if(name.match(/\.jsx?$/)) {
-				return buble.transform(content).code;
+				const isBin = name === pack.bin;
+				if(isBin) {
+					content = content.replace(/^#!\/usr\/bin\/env node/g, '');
+				}
+
+				const {code} = buble.transform(content);
+
+				return isBin
+					? '#!/usr/bin/env node\n' + code
+					: code;
 			}
 
 			return content;
