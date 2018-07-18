@@ -4,7 +4,7 @@ const chalk = require('chalk');
 module.exports = symbolLogger({
 	start: {
 		format: 'blue',
-		symbol: '⚙︎'
+		symbol: '✱'
 	},
 
 	success: {

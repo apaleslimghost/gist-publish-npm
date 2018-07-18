@@ -20,6 +20,7 @@ async function publish(gistId, {npmToken}) {
 		mapValues(files, ({content}, name) => {
 			if(name.match(/\.jsx?$/)) {
 				const isBin = name === pack.bin;
+
 				if(isBin) {
 					content = content.replace(/^#!\/usr\/bin\/env node/g, '');
 				}
