@@ -4,7 +4,7 @@ const chalk = require('chalk');
 module.exports = symbolLogger({
 	start: {
 		format: 'blue',
-		symbol: '⛭'
+		symbol: '⚙︎'
 	},
 
 	success: {
@@ -29,5 +29,11 @@ module.exports = symbolLogger({
 		formatLine: chalk.grey.italic,
 	},
 
-	message: '│'
+	message: '│',
+
+	dependency: {
+		symbol: '╞',
+		format: 'cyan',
+		formatLine: 'grey',
+	},
 });

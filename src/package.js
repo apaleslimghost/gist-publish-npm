@@ -7,6 +7,8 @@ const mapValues = require('lodash.mapvalues');
 const values = require('lodash.values');
 const promiseAllObject = require('@quarterto/promise-all-object');
 const latestVersion = require('latest-version');
+const chalk = require('chalk');
+const logger = require('./logger');
 
 const actualPackageName = (req) => req.split('/', req[0] === '@' ? 2 : 1).join('/');
 
@@ -22,7 +24,10 @@ module.exports = async function({gistId, files, owner, history, description}) {
 				.filter(p => !p.startsWith('.') && !builtins.includes(p))
 				.map(actualPackageName)
 				.reduce((obj, pack) => Object.assign(obj, {
-					[pack]: latestVersion(pack).then(version => `^${version}`)
+					[pack]: latestVersion(pack).then(version => {
+						logger.dependency(`using ${chalk.cyan(pack)} version ^${chalk.blue(version)}`);
+						return `^${version}`;
+					})
 				}), {})
 		), {})
 	);
