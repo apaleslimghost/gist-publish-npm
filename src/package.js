@@ -32,9 +32,13 @@ module.exports = async function({gistId, files, owner, history, description}) {
 		), {})
 	);
 
+	const descriptionParsed = HJSON.parse(description);
+	const majorVersion = descriptionParsed.majorVersion || 1;
+	const version = `${majorVersion}.${history.length - 1}.0`;
+
 	return merge({
 		main,
-		version: `1.${history.length - 1}.0`,
+		version,
 		name: `@${owner.login}/${path.basename(main, '.js')}`,
 		bin: fileContents[main].startsWith('#!/usr/bin/env node') && main,
 		dependencies: await dependencies$,
